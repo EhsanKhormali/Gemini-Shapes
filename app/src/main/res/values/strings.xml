@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Gemini Shapes</string>
+    <string name="action_go">Go</string>
+    <string name="label_prompt">Prompt</string>
+    <string name="prompt_placeholder">Draw me a circle</string>
+    <string name="results_placeholder">(Results will appear here)</string>
+</resources>
