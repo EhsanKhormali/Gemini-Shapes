@@ -1,9 +1,13 @@
 package com.ehsankhormali.myapplication.screens
 
-import android.graphics.Bitmap
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ehsankhormali.myapplication.BuildConfig
+import com.ehsankhormali.myapplication.utils.extractPointLocations
+import com.ehsankhormali.myapplication.utils.extractShapeName
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
 import kotlinx.coroutines.Dispatchers
@@ -13,11 +17,17 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ShapeViewModel:ViewModel() {
-    private val _uiState: MutableStateFlow<ShapeUiState> =
-        MutableStateFlow(ShapeUiState.Initial)
-    val uiState: StateFlow<ShapeUiState> =
+    private val _uiState: MutableStateFlow<ShapeScreenUiState> =
+        MutableStateFlow(ShapeScreenUiState())
+    val uiState: StateFlow<ShapeScreenUiState> =
         _uiState.asStateFlow()
+    var userPrompt by mutableStateOf("")
+        private set
 
+
+    fun updateUserPrompt(prompt: String) {
+        userPrompt = prompt
+    }
     private val generativeModel = GenerativeModel(
         modelName = "gemini-pro",
         apiKey = BuildConfig.apiKey
@@ -26,7 +36,7 @@ class ShapeViewModel:ViewModel() {
     fun sendPrompt(
         prompt: String
     ) {
-        _uiState.value = ShapeUiState.Loading
+        _uiState.value = ShapeScreenUiState(requestState = ShapeScreenRequestState.Loading)
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -36,10 +46,14 @@ class ShapeViewModel:ViewModel() {
                     }
                 )
                 response.text?.let { outputContent ->
-                    _uiState.value = ShapeUiState.Success(outputContent)
+                    // Handle the generated content
+                    val pints= extractPointLocations(outputContent)
+                    val shapeName= extractShapeName(outputContent)
+                    _uiState.value=ShapeScreenUiState(points = pints,requestState =ShapeScreenRequestState.Success(outputContent), shape = shapeName)
+
                 }
             } catch (e: Exception) {
-                _uiState.value = ShapeUiState.Error(e.localizedMessage ?: "")
+                _uiState.value = ShapeScreenUiState(requestState =ShapeScreenRequestState.Error(e.localizedMessage ?: ""))
             }
         }
     }

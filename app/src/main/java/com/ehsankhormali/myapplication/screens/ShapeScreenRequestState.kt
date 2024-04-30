@@ -1,6 +1,6 @@
 package com.ehsankhormali.myapplication.screens
 
-sealed interface ShapeUiState {
+sealed interface ShapeScreenRequestState {
     /**
      * A sealed hierarchy describing the state of the text generation.
      */
@@ -8,20 +8,20 @@ sealed interface ShapeUiState {
         /**
          * Empty state when the screen is first shown
          */
-        object Initial : ShapeUiState
+        object Initial : ShapeScreenRequestState
 
         /**
          * Still loading
          */
-        object Loading : ShapeUiState
+        object Loading : ShapeScreenRequestState
 
         /**
          * Text has been generated
          */
-        data class Success(val outputText: String) : ShapeUiState
+        data class Success(val outputText: String) : ShapeScreenRequestState
 
         /**
          * There was an error generating text
          */
-        data class Error(val errorMessage: String) : ShapeUiState
+        data class Error(val errorMessage: String) : ShapeScreenRequestState
 }
