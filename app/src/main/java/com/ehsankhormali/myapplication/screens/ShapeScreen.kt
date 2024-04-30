@@ -1,15 +1,14 @@
 package com.ehsankhormali.myapplication.screens
 
 import android.graphics.Paint
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -20,13 +19,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.nativeCanvas
@@ -40,14 +40,10 @@ import com.ehsankhormali.myapplication.R
 
 @Composable
 fun ShapeScreen(shapeViewModel: ShapeViewModel = viewModel()) {
-    var pointLocations by remember { mutableStateOf<List<Pair<Float, Float>>>(emptyList()) }
-    val placeholderPrompt = stringResource(R.string.prompt_placeholder)
     val placeholderResult = stringResource(R.string.results_placeholder)
     var result by rememberSaveable { mutableStateOf(placeholderResult) }
     val uiState by shapeViewModel.uiState.collectAsState()
-    val context = LocalContext.current
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        val assetManager = LocalContext.current.assets
         val paint = Paint().apply {
             textAlign = Paint.Align.CENTER
             textSize = 200f
@@ -128,13 +124,10 @@ fun ShapeScreen(shapeViewModel: ShapeViewModel = viewModel()) {
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(16.dp)
-                //.fillMaxSize()
+                .fillMaxSize()
                 .verticalScroll(scrollState)
         )
-        //ExtractPointLocations(text = result)
     }
 }
 
-/*@Composable
-*/
 
